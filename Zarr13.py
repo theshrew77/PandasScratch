@@ -21,11 +21,22 @@ print('Median = ', df[Variable].median(),'\r\n')
 
 #create the four plot for the data
 nist.FourPlot(df,Variable)
+
+#calculate mean confidence interval
 N = df.size
 s = float(df.std())
 Y = float(df.mean())
 alpha = 0.05
 MeanConfidenceInterval = Y + np.asarray(stats.t(df=N-1).ppf((alpha/2,1-alpha/2)))*s/np.sqrt(N)
-#print(stats.t(df=5).ppf((0.025,0.975)))
+print('Mean confidence interval =', MeanConfidenceInterval, '\n')
 
-print(MeanConfidenceInterval)
+#test hypothesis that population mean = u0
+u0 = 9.26
+T = (Y-u0)*np.sqrt(N)/s
+CriticalValue = max(np.asarray(stats.t(df=N-1).ppf((alpha/2,1-alpha/2))))
+if abs(T) > CriticalValue:
+    print("|%4.2f| > %.2f, null hypothesis pop. mean = %.2f rejected\n" %(T,CriticalValue,u0))
+if abs(T) <= CriticalValue:
+    print("|%4.2f| <= %.2f, null hypothesis pop. mean = %.2f accepted\n" %(T,CriticalValue,u0))
+
+
